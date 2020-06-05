@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -52,14 +55,25 @@ public class ApiUpdateActividad extends HttpServlet {
 		
 		
 		Actividad actividad= new Actividad();
+		Date fecha = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			actividad.setFecha_inicio(sdf.parse(jsonObject.getString("fecha_inicio")));
+		
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		
 		actividad.setId(jsonObject.getInt("id"));
 		actividad.setNombre(jsonObject.getString("nombre"));
-		
+		actividad.setDias_semana(jsonObject.getString("dias_semana"));
+		actividad.setHoras(jsonObject.getInt("horas"));
+		actividad.setMax_participantes(jsonObject.getInt("max_participantes"));
 		
 		ModeloActividad ma= new ModeloActividad();
 		
-		ma.Insert(actividad);
+		ma.update(actividad);
 		
 		
 		try {
